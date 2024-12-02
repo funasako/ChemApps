@@ -6,7 +6,6 @@ import os
 st.title("DFT | GaussLog")
 st.markdown("**:blue[※動作にはインターネット接続が必要です。]**")
 st.write("1. 構造最適化（opt+freq）後のLOGファイルを以下にドラッグ&ドロップする。")
-st.write("　　※単一ファイルのみ可")
 st.write("2. \"Download Result\"ボタンからテキストファイルをダウンロード")
 st.write("3. 別のLOGファイルを処理する場合は、続けてドラッグ&ドロップする（古い結果は削除）。")
 st.write("")
