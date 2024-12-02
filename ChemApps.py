@@ -11,6 +11,6 @@ gausslog = st.Page(page="contents/gausslog.py", title="DFT | GaussLog", icon="�
 pg = st.navigation([uv_vis, ir, gausslog])
 
 # コメントの追加
-st.sidebar.write("Funasako Lab")
+st.sidebar.write("The Apps developed for Funasako Lab")
 
 pg.run()
