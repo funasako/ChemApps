@@ -9,8 +9,4 @@ uv_vis = st.Page(page="contents/uv-vis.py", title="UV-vis | JASCO .txt to xlsx",
 ir = st.Page(page="contents/ir.py", title="Infrared | JASCO .txt to xlsx", icon="📊")
 gausslog = st.Page(page="contents/gausslog.py", title="DFT | GaussLog", icon="📄")
 pg = st.navigation([uv_vis, ir, gausslog])
-
-# コメントの追加
-st.sidebar.write("The Apps developed for Funasako Lab")
-
 pg.run()
