@@ -1,7 +1,7 @@
 import streamlit as st
 
 # タイトル
-st.set_page_config(page_title="ChemApps", page_icon=":bar_chart:", )
+st.set_page_config(page_title="ChemApps", page_icon=":test_tube:", )
 
 
 # sidebar
