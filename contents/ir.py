@@ -9,7 +9,7 @@ import os
 import math
 
 # タイトル等
-# st.set_page_config(page_title="IR | JASCO Spectra Formatter", page_icon=":bar_chart:", )
+st.set_page_config(page_title="IR | JASCO Spectra Formatter", page_icon=":bar_chart:", )
 st.title("IR | JASCO Spectra File to Excel")
 st.markdown("**:blue[※動作にはインターネット接続が必要です。]**")
 st.write("1. スペクトルマネージャーでテキストファイルをエクスポートする（ファイル名をしっかりつけておく）")
