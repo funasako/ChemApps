@@ -3,6 +3,8 @@ import streamlit as st
 # タイトル
 st.set_page_config(page_title="ChemApps", page_icon=":test_tube:", )
 
+# マルチページモードフラグを設定
+st.session_state['multi_page'] = True  # フラグをTrueに設定
 
 # sidebar
 uv_vis = st.Page(page="contents/uv-vis.py", title="UV-vis | JASCO .txt to xlsx", icon="📊")
