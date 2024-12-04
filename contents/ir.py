@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
+import os
+os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 import matplotlib.pyplot as plt
 import io
 import xlsxwriter
 import datetime
 import pytz
-import os
 import math
 
 # タイトル等
