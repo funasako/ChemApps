@@ -7,6 +7,7 @@ import io
 import xlsxwriter
 import datetime
 import pytz
+import re
 
 
 # タイトル等
