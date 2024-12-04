@@ -55,13 +55,8 @@ def extract_xy_data(content):
     if extended_info_index is not None:
         xy_end = extended_info_index - 2  # 2行上にする
     else:
-        # 空行があれば、その1行上
-        empty_line_index = next((i for i, line in enumerate(content) if line.strip() == ""), None)
-        if empty_line_index is not None:
-            xy_end = empty_line_index - 1  # 1行上にする
-        else:
-            # 上記どちらでもない場合は、ファイルの最終行
-            xy_end = len(content) - 1  # 最終行
+        # ない場合は、ファイルの最終行
+        xy_end = len(content) - 1  # 最終行
     
     # データを抽出
     # xy_data_lines = content[xy_start:xy_end + 1]
@@ -120,7 +115,7 @@ def convert_files_to_excel(files):
         for file in files:
             try:
                 # ファイル名とデータの読み取り
-                # content = file.read().decode("shift_jis").splitlines()
+                # 読み込み時に空行は削除
                 content = [
                 line.strip() for line in file.read().decode("shift_jis").splitlines() if line.strip()
                 ]
