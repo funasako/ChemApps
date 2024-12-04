@@ -63,8 +63,17 @@ def extract_xy_data(content):
             # 上記どちらでもない場合は、ファイルの最終行
             xy_end = len(content) - 1  # 最終行
     
-    # データを抽出
-    xy_data_lines = content[xy_start:xy_end + 1]
+    # データを抽出し、空白行やコメントを除外
+    xy_data_tmp = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
+    
+    # XYデータの解析（タブやスペースを考慮）
+    xy_data_lines = []
+    for line in xy_data_tmp:
+        try:
+            x, y = re.split(r'\s+', line)  # 任意の空白で分割
+            xy_data_lines.append((float(x), float(y)))
+        except ValueError:
+            raise ValueError(f"無効なXYデータが含まれています: {line}")
     
     return xy_data_lines
 
