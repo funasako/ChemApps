@@ -56,16 +56,15 @@ def extract_xy_data(content):
     #終了行の検索
     xy_end = None  
     # 'Extended Information'があれば、その1行上
-    extended_info_index = next((i for i, line in enumerate(content) if 'Extended Information' in line), None)
-    if extended_info_index is not None:
-        xy_end = extended_info_index - 1  # 1行上にする
+    xy_end_keyword = next((i for i, line in enumerate(content) if 'Extended Information' in line), None)
+    if xy_end_keyword is not None:
+        xy_end = xy_end_keyword - 1  # 1行上にする
     # ない場合は、ファイルの最終行
     else:
         xy_end = len(content) - 1  # 最終行
     
     # データを抽出
-    # xy_data_lines = content[xy_start:xy_end + 1]
-    xy_data_lines = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
+    xy_data_lines = content[xy_start:xy_end + 1]
     
     return xy_data_lines
 
