@@ -63,24 +63,21 @@ def extract_xy_data(content):
             # 上記どちらでもない場合は、ファイルの最終行
             xy_end = len(content) - 1  # 最終行
     
-    # データを抽出し、空白行やコメントを除外
-    xy_data_tmp = content[xy_start:xy_end + 1]
+    # データを抽出
+    xy_data_lines = content[xy_start:xy_end + 1]
     
-    # XYデータの解析（タブやスペースを考慮）
-    xy_data_lines = []
-    for line in xy_data_tmp:
-        try:
-            # 複数のスペースやタブを1つのスペースに統一して分割
-            parts = line.split()  # split()は連続する空白（スペースやタブ）を1つの区切りとみなす
-            if len(parts) == 2:
-                x, y = map(float, parts)  # 数値に変換
-                xy_data_lines.append((x, y))
-            else:
-                raise ValueError(f"無効なデータ行: {line}")
-        except ValueError:
-            raise ValueError(f"無効なデータ行: {line}")
+    # pandasで処理する
+    # まず、xy_data_linesをCSV形式の文字列に変換
+    xy_data_str = "\n".join(xy_data_lines)
     
-    return xy_data_lines
+    # pandasで読み込む（タブや空白で区切られたデータを処理）
+    from io import StringIO
+    df = pd.read_csv(StringIO(xy_data_str), delim_whitespace=True, header=None, names=["X", "Y"])
+    
+    # 型をfloatに変換
+    df = df.astype(float)
+    
+    return df
 
 def convert_files_to_excel(files):
     output = io.BytesIO()
@@ -135,10 +132,11 @@ def convert_files_to_excel(files):
                 # ファイル名とデータの読み取り
                 content = file.read().decode("shift_jis").splitlines()
                 # データ抽出関数を使用
-                xy_data_lines = extract_xy_data(content)
+                # xy_data_lines = extract_xy_data(content)
+                df = extract_xy_data(content)
     
-                data = [line.split() for line in xy_data_lines if line.strip()]
-                df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+                # data = [line.split() for line in xy_data_lines if line.strip()]
+                # df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
                 # データフレーム化
                 data_frames.append(df)
         
