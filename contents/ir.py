@@ -104,7 +104,10 @@ def convert_files_to_excel(files):
         for i, file in enumerate(uploaded_files):
             try:
                 # ファイル名とデータの読み取り
-                content = file.read().decode("shift_jis").splitlines()
+                # 読み込み時に空行は削除
+                content = [
+                line.strip() for line in file.read().decode("shift_jis").splitlines() if line.strip()
+                ]
                 
                 # XYデータを抽出してDataFrameに追加
                 xy_data_lines = extract_xy_data(content)
