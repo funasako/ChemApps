@@ -75,7 +75,7 @@ def extract_xy_data(content):
             parts = line.split()  # split()は連続する空白（スペースやタブ）を1つの区切りとみなす
             if len(parts) == 2:
                 x, y = map(float, parts)  # 数値に変換
-                xy_data.append((x, y))
+                xy_data_lines.append((x, y))
             else:
                 raise ValueError(f"無効なデータ行: {line}")
         except ValueError:
