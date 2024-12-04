@@ -71,10 +71,15 @@ def extract_xy_data(content):
     xy_data_lines = []
     for line in xy_data_tmp:
         try:
-            x, y = re.split(r'\s+', line)  # 任意の空白で分割
-            xy_data_lines.append((float(x), float(y)))
+            # 複数のスペースやタブを1つのスペースに統一して分割
+            parts = line.split()  # split()は連続する空白（スペースやタブ）を1つの区切りとみなす
+            if len(parts) == 2:
+                x, y = map(float, parts)  # 数値に変換
+                xy_data.append((x, y))
+            else:
+                raise ValueError(f"無効なデータ行: {line}")
         except ValueError:
-            raise ValueError(f"無効なXYデータが含まれています: {line}")
+            raise ValueError(f"無効なデータ行: {line}")
     
     return xy_data_lines
 
