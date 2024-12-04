@@ -120,7 +120,10 @@ def convert_files_to_excel(files):
         for file in files:
             try:
                 # ファイル名とデータの読み取り
-                content = file.read().decode("shift_jis").splitlines()
+                # content = file.read().decode("shift_jis").splitlines()
+                content = [
+                line.strip() for line in file.read().decode("shift_jis").splitlines() if line.strip()
+                ]
                 # データ抽出関数を使用
                 xy_data_lines = extract_xy_data(content)
     
