@@ -41,13 +41,9 @@ def col_num_to_excel_col(n):
     
 def extract_xy_data(content):
     try:
-        # 「XYDATA」行、または「nm」と「abs」を含む行を検索
-        xy_start = next(
-            i + 1 for i, line in enumerate(content)
-            if "XYDATA" in line or ("nm" in line and "abs" in line.lower())
-        )
-    except StopIteration:
-        raise ValueError("日本分光もしくはHITACHIのスペクトルファイルではないようです。")
+        xy_start = content.index("XYDATA") + 1  # "XYDATA"の位置を検索
+    except ValueError:
+        raise ValueError("日本分光のスペクトルファイルではないようです。")
         
     xy_end = None #終了行は以下のように分岐    
     # '##### Extended Information'があれば、その2行上
@@ -66,18 +62,7 @@ def extract_xy_data(content):
     # データを抽出
     xy_data_lines = content[xy_start:xy_end + 1]
     
-    # pandasで処理する
-    # まず、xy_data_linesをCSV形式の文字列に変換
-    xy_data_str = "\n".join(xy_data_lines)
-    
-    # pandasで読み込む（タブや空白で区切られたデータを処理）
-    from io import StringIO
-    df = pd.read_csv(StringIO(xy_data_str), delim_whitespace=True, header=None, names=["X", "Y"])
-    
-    # 型をfloatに変換
-    df = df.astype(float)
-    
-    return df
+    return xy_data_lines
 
 def convert_files_to_excel(files):
     output = io.BytesIO()
@@ -132,11 +117,10 @@ def convert_files_to_excel(files):
                 # ファイル名とデータの読み取り
                 content = file.read().decode("shift_jis").splitlines()
                 # データ抽出関数を使用
-                # xy_data_lines = extract_xy_data(content)
-                df = extract_xy_data(content)
+                xy_data_lines = extract_xy_data(content)
     
-                # data = [line.split() for line in xy_data_lines if line.strip()]
-                # df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+                data = [line.split() for line in xy_data_lines if line.strip()]
+                df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
                 # データフレーム化
                 data_frames.append(df)
         
