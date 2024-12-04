@@ -43,29 +43,33 @@ def col_num_to_excel_col(n):
 
 # テキストファイルのデータ構造分析
 def extract_xy_data(content):
+    #開始行の検索
     try:
-        xy_start = content.index("XYDATA") + 1  # "XYDATA"の位置を検索
-    except ValueError:
+        # 「XYDATA」行、または「nm」と「abs」を含む行を検索
+        xy_start = next(
+            i + 1 for i, line in enumerate(content)
+            if "XYDATA" in line
+        )
+    except StopIteration:
         raise ValueError("日本分光のスペクトルファイルではないようです。")
-    xy_end = None #終了行は以下のように分岐    
-    # '##### Extended Information'があれば、その2行上
-    extended_info_index = next((i for i, line in enumerate(content) if '##### Extended Information' in line), None)
+
+    #終了行の検索
+    xy_end = None  
+    # 'Extended Information'があれば、その1行上
+    extended_info_index = next((i for i, line in enumerate(content) if 'Extended Information' in line), None)
     if extended_info_index is not None:
-        xy_end = extended_info_index - 2  # 2行上にする
+        xy_end = extended_info_index - 1  # 1行上にする
+    # ない場合は、ファイルの最終行
     else:
-        # 空行があれば、その1行上
-        empty_line_index = next((i for i, line in enumerate(content) if line.strip() == ""), None)
-        if empty_line_index is not None:
-            xy_end = empty_line_index - 1  # 1行上にする
-        else:
-            # 上記どちらでもない場合は、ファイルの最終行
-            xy_end = len(content) - 1  # 最終行
+        xy_end = len(content) - 1  # 最終行
     
     # データを抽出
-    xy_data_lines = content[xy_start:xy_end + 1]
+    # xy_data_lines = content[xy_start:xy_end + 1]
+    xy_data_lines = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
     
     return xy_data_lines
 
+# Excelファイルの作成
 def convert_files_to_excel(files):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
