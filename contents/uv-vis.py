@@ -39,8 +39,10 @@ def col_num_to_excel_col(n):
         result = chr(n % 26 + 65) + result
         n = n // 26 - 1
     return result
-    
+
+# テキストファイルのデータ構造分析    
 def extract_xy_data(content):
+    #開始行の検索
     try:
         # 「XYDATA」行、または「nm」と「abs」を含む行を検索
         xy_start = next(
@@ -50,21 +52,22 @@ def extract_xy_data(content):
     except StopIteration:
         raise ValueError("日本分光もしくはHITACHIのスペクトルファイルではないようです。")
         
-    xy_end = None #終了行は以下のように分岐    
-    # '##### Extended Information'があれば、その2行上
-    extended_info_index = next((i for i, line in enumerate(content) if '##### Extended Information' in line), None)
-    if extended_info_index is not None:
-        xy_end = extended_info_index - 2  # 2行上にする
+    #終了行の検索        
+    xy_end = None 
+    # 'Extended Information'があれば、その1行上
+    xy_end_keyword = next((i for i, line in enumerate(content) if 'Extended Information' in line), None)
+    if xy_end_keyword is not None:
+        xy_end = xy_end_keyword - 1
     else:
         # ない場合は、ファイルの最終行
         xy_end = len(content) - 1  # 最終行
     
     # データを抽出
     xy_data_lines = content[xy_start:xy_end + 1]
-    # xy_data_lines = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
     
     return xy_data_lines
 
+# Excelファイルの作成
 def convert_files_to_excel(files):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
