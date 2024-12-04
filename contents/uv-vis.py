@@ -44,7 +44,7 @@ def extract_xy_data(content):
         # 「XYDATA」行、または「nm」と「abs」を含む行を検索
         xy_start = next(
             i + 1 for i, line in enumerate(content)
-            if "XYDATA" in line or ("nm" in line and "abs" in line)
+            if "XYDATA" in line or ("nm" in line and "abs" in line.lower())
         )
     except StopIteration:
         raise ValueError("日本分光もしくはHITACHIのスペクトルファイルではないようです。")
