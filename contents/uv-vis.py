@@ -55,8 +55,8 @@ def extract_xy_data(content):
     if extended_info_index is not None:
         xy_end = extended_info_index - 2  # 2行上にする
     else:
-        # 空行があれば、その1行上
-        empty_line_index = next((i for i, line in enumerate(content) if line.strip() == ""), None)
+        # 空行があれば、その1行上（最後にヒットしたものを考慮）
+        empty_line_index = next((i for i in range(len(content) - 1, -1, -1) if content[i].strip() == ""), None)
         if empty_line_index is not None:
             xy_end = empty_line_index - 1  # 1行上にする
         else:
