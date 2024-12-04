@@ -60,8 +60,8 @@ def extract_xy_data(content):
         xy_end = len(content) - 1  # 最終行
     
     # データを抽出
-    # xy_data_lines = content[xy_start:xy_end + 1]
-    xy_data_lines = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
+    xy_data_lines = content[xy_start:xy_end + 1]
+    # xy_data_lines = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
     
     return xy_data_lines
 
