@@ -65,7 +65,7 @@ def extract_xy_data(content):
             xy_end = len(content) - 1  # 最終行
     
     # データを抽出し、空白行やコメントを除外
-    xy_data_tmp = [line.strip() for line in content[xy_start:xy_end + 1] if line.strip() and not line.startswith("#")]
+    xy_data_tmp = content[xy_start:xy_end + 1]
     
     # XYデータの解析（タブやスペースを考慮）
     xy_data_lines = []
