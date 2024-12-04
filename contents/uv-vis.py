@@ -41,9 +41,13 @@ def col_num_to_excel_col(n):
     
 def extract_xy_data(content):
     try:
-        xy_start = content.index("XYDATA") + 1  # "XYDATA"の位置を検索
-    except ValueError:
-        raise ValueError("日本分光のスペクトルファイルではないようです。")
+        # 「XYDATA」行、または「nm」と「abs」を含む行を検索
+        xy_start = next(
+            i + 1 for i, line in enumerate(content)
+            if "XYDATA" in line or ("nm" in line and "abs" in line)
+        )
+    except StopIteration:
+        raise ValueError("日本分光もしくはHITACHIのスペクトルファイルではないようです。")
         
     xy_end = None #終了行は以下のように分岐    
     # '##### Extended Information'があれば、その2行上
