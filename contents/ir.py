@@ -8,6 +8,7 @@ import xlsxwriter
 import datetime
 import pytz
 import math
+import chardet
 
 # タイトル等
 if 'multi_page' not in st.session_state:
@@ -104,10 +105,17 @@ def convert_files_to_excel(files):
         
         for i, file in enumerate(uploaded_files):
             try:
-                # ファイル名とデータの読み取り
-                # 読み込み時に空行は削除
+                # ファイルのバイトデータを取得
+                file_bytes = file.read()
+                
+                # エンコーディングを自動判別
+                detected_encoding = chardet.detect(file_bytes)["encoding"]
+                if not detected_encoding:
+                    raise ValueError("ファイルのエンコーディングを判別できませんでした。")
+                
+                # ファイルをデコードして読み込み、空行を削除
                 content = [
-                line.strip() for line in file.read().decode("shift_jis").splitlines() if line.strip()
+                    line.strip() for line in file_bytes.decode(detected_encoding).splitlines() if line.strip()
                 ]
                 
                 # XYデータを抽出してDataFrameに追加
