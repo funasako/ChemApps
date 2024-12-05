@@ -8,7 +8,6 @@ import xlsxwriter
 import datetime
 import pytz
 import math
-import chardet
 
 # タイトル等
 if 'multi_page' not in st.session_state:
