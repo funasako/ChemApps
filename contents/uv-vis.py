@@ -7,6 +7,7 @@ import io
 import xlsxwriter
 import datetime
 import pytz
+import chardet
 
 
 # タイトル等
@@ -119,9 +120,17 @@ def convert_files_to_excel(files):
         for file in files:
             try:
                 # ファイル名とデータの読み取り
-                # 読み込み時に空行は削除
+                # ファイルのバイトデータを取得
+                file_bytes = file.read()
+                
+                # エンコーディングを自動判別
+                encoding = chardet.detect(file_bytes)["encoding"]
+                if not encoding:
+                    raise ValueError("ファイルのエンコーディングを判別できませんでした。")
+                
+                # ファイルをデコードして読み込み、空行を削除
                 content = [
-                line.strip() for line in file.read().decode("shift_jis").splitlines() if line.strip()
+                    line.strip() for line in file_bytes.decode(encoding).splitlines() if line.strip()
                 ]
                 # データ抽出関数を使用
                 xy_data_lines = extract_xy_data(content)
