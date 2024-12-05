@@ -102,21 +102,29 @@ def convert_files_to_excel(files):
         # ファイル処理ループの前に、ファイル数を取得
         num_files = len(uploaded_files)
         now_file = 1
+
+        # 文字エンコーディング候補
+        ENCODINGS = ["shift_jis", "utf-8_sig"]
         
         for i, file in enumerate(uploaded_files):
             try:
                 # ファイルのバイトデータを取得
                 file_bytes = file.read()
                 
-                # エンコーディングを自動判別
-                detected_encoding = chardet.detect(file_bytes)["encoding"]
-                if not detected_encoding:
-                    raise ValueError("ファイルのエンコーディングを判別できませんでした。")
+                # 順番にエンコーディングを試す
+                content = None
+                for encoding in ENCODINGS:
+                    try:
+                        # 読み込んで空行削除
+                        content = [
+                            line.strip() for line in file_bytes.decode(encoding).splitlines() if line.strip()
+                        ]
+                        break  # 成功したらループを抜ける
+                    except UnicodeDecodeError:
+                        continue  # 次のエンコーディングを試す
                 
-                # ファイルをデコードして読み込み、空行を削除
-                content = [
-                    line.strip() for line in file_bytes.decode(detected_encoding).splitlines() if line.strip()
-                ]
+                if content is None:
+                    raise ValueError("ファイルを読み込めるエンコーディングが見つかりませんでした。")
                 
                 # XYデータを抽出してDataFrameに追加
                 xy_data_lines = extract_xy_data(content)
